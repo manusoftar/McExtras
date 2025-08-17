@@ -1,0 +1,11 @@
+# Archivo de configuración de McExtras
+
+# Nombre del mundo de supervivencia. Debe ser el nombre exacto de la carpeta del mundo.
+survival-world-name: "Principal"
+
+# Nombre del mapa en blanco que el aldeano vende.
+# El jugador debe tener un item con este nombre.
+exploration-map-name: "Mapa de Exploracion"
+
+# Nombre del mapa que se le dará al jugador al hacer clic derecho.
+treasure-map-name: "Mapa del Tesoro Enterrado"

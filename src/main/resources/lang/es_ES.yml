@@ -1,0 +1,6 @@
+messages:
+  searching: "§aBuscando un tesoro cercano, por favor espera..."
+  not-found: "§cNo se pudo encontrar un tesoro cerca de tu posición."
+  found: "§a¡Mapa del tesoro obtenido! Ubicación: "
+  error: "§cOcurrió un error al generar el mapa."
+  no-survival-world: "§cEl mundo de supervivencia no existe."
