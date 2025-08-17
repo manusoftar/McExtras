@@ -3,8 +3,11 @@ package ar.com.manusoftar.mcextras.utils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.generator.structure.StructureType;
+import org.bukkit.inventory.meta.ItemMeta;
 
 @SuppressWarnings({"deprecation"})
 public class Utils {
@@ -80,5 +83,26 @@ public class Utils {
 
     public String getTiposConocidos() {
         return String.join(", ", estructurasConocidas.stream().map(t -> t.getKey().getKey()).toArray(String[]::new));
+    }
+
+    public NamespacedKey getItemKey(StructureType tipo) {
+           Optional<StructureType> tipoEstructura = Utils.estructurasConocidas.stream().filter((estructura) -> estructura.equals(tipo)).findAny();
+           if (tipoEstructura.isPresent()) {
+               return tipoEstructura.get().getKey();
+           } else {
+             return null;
+           }
+    }
+
+    public StructureType getTypeFromKeys(ItemMeta meta) {
+           
+           return Utils.estructurasConocidas.stream().filter(estructura -> {
+                 if (meta.getPersistentDataContainer().getKeys().contains(estructura.getKey())) {
+                    return true;
+                 }
+                 return false; 
+           }).findFirst()
+             .orElse(null); 
+           
     }
 }

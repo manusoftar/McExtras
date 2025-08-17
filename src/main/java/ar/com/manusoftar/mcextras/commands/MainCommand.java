@@ -36,6 +36,9 @@ public class MainCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
         World mundoSurvival = Bukkit.getWorld("Principal");
+        String structureName = "";
+        StructureType structureType = null;
+        org.bukkit.StructureType estructura = null;
         switch (command.getName().toLowerCase()) {
             case "gettreasuremap":
                 if (!(sender instanceof org.bukkit.entity.Player)) {
@@ -43,19 +46,11 @@ public class MainCommand implements CommandExecutor {
                     return true;
                 }
 
-                //sender.sendMessage("Este es un comando de getTreasureMap!");
-
-                //sender.sendMessage("§aBuscando un tesoro, por favor espera...");
-
-                // Ejecutar la tarea de búsqueda en un hilo asíncrono
-
                 if (mundoSurvival == null) {
                     sender.sendMessage("§cEl mundo de supervivencia 'Principal' no existe.");
                     return true;
                 }
 
-                // Usar una ubicación de inicio del mundo para evitar problemas de chunks no
-                // cargados
                 Location startLocation = player.getLocation();
 
                 sender.sendMessage("Voy a buscar un tesoro cerca de: " + startLocation.getBlockX() + ", "
@@ -91,8 +86,8 @@ public class MainCommand implements CommandExecutor {
             // break;
 
             case "gettriggeritem":
-                
-                String structureName = args[0].toUpperCase();
+
+                structureName = args[0].toUpperCase();
                 if (!player.isOp()) { // O puedes usar un permiso: if (!player.hasPermission("mcextras.givemap"))
                     player.sendMessage("No tienes permiso para usar este comando.");
                     return true;
@@ -101,15 +96,22 @@ public class MainCommand implements CommandExecutor {
                 // Creación del mapa en blanco
                 ItemStack blankMap = new ItemStack(Material.MAP);
                 ItemMeta meta = blankMap.getItemMeta();
+                structureType = utils.getEstructurasConocidas(structureName);
+                if (structureType != null) {
+                    NamespacedKey llave = utils.getItemKey(structureType);
+                    if (llave != null) {
+                        // Añadimos el NBT tag personalizado al ítem
+                        meta.getPersistentDataContainer().set(llave, PersistentDataType.STRING, "true");
+                        meta.setDisplayName("§f" + "Mapa de " + structureType.getKey().asString()); // Sigue siendo útil
+                                                                                                    // para la
+                                                                                                    // visualización
 
-                // Añadimos el NBT tag personalizado al ítem
-                meta.getPersistentDataContainer().set(customMapKey, PersistentDataType.STRING, "true");
-                meta.setDisplayName("§f" + "Mapa de Exploración"); // Sigue siendo útil para la visualización
+                        blankMap.setItemMeta(meta);
 
-                blankMap.setItemMeta(meta);
-
-                player.getInventory().addItem(blankMap);
-                player.sendMessage("¡Has recibido un mapa de exploración!");
+                        player.getInventory().addItem(blankMap);
+                        player.sendMessage("¡Has recibido un token!");
+                    }
+                }
                 return true;
             // break;
 
@@ -123,10 +125,7 @@ public class MainCommand implements CommandExecutor {
                     sender.sendMessage("§cUso: /getstructuremap <estructura>");
                     return true;
                 }
-                String structureName = args[0].toUpperCase();
-                StructureType structureType = null;
-
-                org.bukkit.StructureType estructura = null;
+                structureName = args[0].toUpperCase();
 
                 structureType = utils.getEstructurasConocidas(structureName);
                 estructura = utils.traducir(structureType);
